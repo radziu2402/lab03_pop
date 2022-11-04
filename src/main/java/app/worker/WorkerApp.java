@@ -1,11 +1,14 @@
 package app.worker;
 
+import app.common.TimeSimulator;
+
 import java.util.Scanner;
 
 public class WorkerApp {
     public static void main(String[] args) {
         ComplaintListReader complaintListReader = new ComplaintListReader();
         System.out.println("Witaj pracowniku AGD");
+        TimeSimulator timeSimulator = new TimeSimulator();
         Scanner scanner = new Scanner(System.in);
         while(true) {
             System.out.println("\n\nWcisnij 1 aby pobrac liste reklamacji");
@@ -25,25 +28,26 @@ public class WorkerApp {
                     complaintListReader.readAllComplaints();
                     System.out.println("Wpisz ID reklamacji ktora chcesz przyjac");
                     int acceptComplaintId = scanner.nextInt();
-                    complaintListReader.changeAcceptStatus(acceptComplaintId);
+                    complaintListReader.changeAcceptStatus(acceptComplaintId,timeSimulator.checkTime());
+
                 }
                 case 3 -> {
                     complaintListReader.readAllComplaints();
                     System.out.println("Wpisz ID reklamacji ktora chcesz odrzucic");
                     int declineComplaintId = scanner.nextInt();
-                    complaintListReader.changeDeclineStatus(declineComplaintId);
+                    complaintListReader.changeDeclineStatus(declineComplaintId,timeSimulator.checkTime());
                 }
                 case 4 -> {
                     complaintListReader.readAllComplaints();
                     System.out.println("Wpisz ID reklamacji ktora chcesz zakonczyc");
                     int endComplaintId = scanner.nextInt();
-                    complaintListReader.changeEndStatus(endComplaintId);
+                    complaintListReader.changeEndStatus(endComplaintId,timeSimulator.checkTime());
                 }
                 case 5 -> {
                     complaintListReader.readAllComplaints();
                     System.out.println("Wpisz ID reklamacji ktora chcesz przekazac klientowi do odbioru");
                     int readyComplaintId = scanner.nextInt();
-                    complaintListReader.changeReadyStatus(readyComplaintId);
+                    complaintListReader.changeReadyStatus(readyComplaintId,timeSimulator.checkTime());
                 }
                 case 6 -> System.exit(0);
                 default -> System.out.println("Niepoprawny wybor! Wpisz jeszcze raz \n\n");

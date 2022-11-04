@@ -3,6 +3,7 @@ package app.client;
 import app.common.Complaint;
 import app.common.Product;
 import app.common.Status;
+import app.common.TimeSimulator;
 
 import java.util.Scanner;
 
@@ -16,6 +17,7 @@ public class Clientapp {
         Client client = new Client(fileTool.checkNumberOfClients() + 1, name);
         fileTool.addClientToFile(client);
         ComplaintFileTool complaintFileTool = new ComplaintFileTool(client.getClientId());
+        TimeSimulator timeSimulator = new TimeSimulator();
 
         boolean complaint = false;
         while(true) {
@@ -49,17 +51,22 @@ public class Clientapp {
                     scanner.nextLine();
                     System.out.println("Opis krotko reklamacje");
                     String description = scanner.nextLine();
-                    client.setComplaint(new Complaint(client.getClientId(),description ,new Product(productId,nameOfProduct,producer)));
+                    timeSimulator.checkTime();
+                    client.setComplaint(new Complaint(client.getClientId(),description ,new Product(productId,nameOfProduct,producer),timeSimulator.checkTime()));
                     complaint = true;
                     complaintFileTool.addComplaint(client);
                     break;
 
                 case 3:
-                    System.out.println("STATUS TWOJEJ REKLAMACJI:");
-                    System.out.println(complaintFileTool.checkStatus());
+                    if(!complaint){
+                        System.out.println("Jeszcze nie utworzyles reklamacji");
+                        break;
+                    }
+                    System.out.println("STATUS TWOJEJ REKLAMACJI: " + complaintFileTool.checkStatus());
+                    System.out.println("Status zmieniono: " + complaintFileTool.checkTime());
                     if(complaintFileTool.checkStatus().equals(Status.DO_ODBIORU) || complaintFileTool.checkStatus().equals(Status.ZAAKCEPTOWANA)){
                         if(complaintFileTool.checkStatus().equals(Status.ZAAKCEPTOWANA)){
-                            System.out.println("Poczekaj az wadliwy produkt bedzie gotowy od odbioru");
+                            System.out.println("Poczekaj az wymieniony produkt bedzie gotowy od odbioru");
                         }
                         System.out.println("Notka od producenta:");
                         System.out.println(complaintFileTool.checkNote());
@@ -71,6 +78,8 @@ public class Clientapp {
                     if(client.getStatus().equals(Status.DO_ODBIORU)){
                         System.out.println("Produkt zostal odebrany. Przesylka dojdzie do ciebie w ciagu 3 dni roboczych");
                         client.getComplaint().setStatus(Status.ODEBRANA);
+                        client.getComplaint().setDate(timeSimulator.checkTime());
+                        complaintFileTool.updateTime(client);
                         complaintFileTool.updateStatus(client);
                     }
                     else

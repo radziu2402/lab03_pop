@@ -6,7 +6,6 @@ public class ClientFileTool {
     String filename = "clients.txt";
 
     public int checkNumberOfClients(){
-
         File file = new File(filename);
         if(!file.exists()){
             try {

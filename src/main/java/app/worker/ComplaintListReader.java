@@ -6,7 +6,9 @@ import app.common.Status;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -16,7 +18,7 @@ public class ComplaintListReader {
     public List<Complaint> getComplaintList() {
         return complaintList;
     }
-    public void changeAcceptStatus(int complaintId){
+    public void changeAcceptStatus(int complaintId, LocalDate localDate){
         int j = 0;
         int i = 0;
         for (Complaint complaint: complaintList) {
@@ -25,6 +27,20 @@ public class ComplaintListReader {
                     i++;
                     complaint.setStatus(Status.PRZYJETA);
                     String filePath = complaint.getcId() + "_Complaint.txt";
+                    complaint.setDate(localDate);
+                    Path path = Paths.get(filePath);
+                    List<String> lines;
+                    try {
+                        lines = Files.readAllLines(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    lines.set(7, String.valueOf(complaint.getDate()));
+                    try {
+                        Files.write(path, lines);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     Scanner sc;
                     try {
                         sc = new Scanner(new File(filePath));
@@ -74,7 +90,7 @@ public class ComplaintListReader {
         }
     }
 
-    public void changeDeclineStatus(int complaintId){
+    public void changeDeclineStatus(int complaintId, LocalDate localDate){
         int j = 0;
         int i = 0;
         for (Complaint complaint: complaintList) {
@@ -83,6 +99,20 @@ public class ComplaintListReader {
                     i++;
                     complaint.setStatus(Status.ODRZUCONA);
                     String filePath = complaint.getcId() + "_Complaint.txt";
+                    complaint.setDate(localDate);
+                    Path path = Paths.get(filePath);
+                    List<String> lines;
+                    try {
+                        lines = Files.readAllLines(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    lines.set(7, String.valueOf(complaint.getDate()));
+                    try {
+                        Files.write(path, lines);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     Scanner sc;
                     try {
                         sc = new Scanner(new File(filePath));
@@ -132,7 +162,7 @@ public class ComplaintListReader {
             System.out.println("Nie mozesz odrzucic reklamacji o tym statusie");
         }
     }
-    public void changeEndStatus(int endComplaintId) {
+    public void changeEndStatus(int endComplaintId, LocalDate localDate) {
         int j = 0;
         int i = 0;
         for (Complaint complaint: complaintList) {
@@ -141,6 +171,20 @@ public class ComplaintListReader {
                     i++;
                     complaint.setStatus(Status.ZAKONCZONA);
                     String filePath = complaint.getcId() + "_Complaint.txt";
+                    complaint.setDate(localDate);
+                    Path path = Paths.get(filePath);
+                    List<String> lines;
+                    try {
+                        lines = Files.readAllLines(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    lines.set(7, String.valueOf(complaint.getDate()));
+                    try {
+                        Files.write(path, lines);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     Scanner sc;
                     try {
                         sc = new Scanner(new File(filePath));
@@ -191,7 +235,7 @@ public class ComplaintListReader {
         }
     }
 
-    public void changeReadyStatus(int readyComplaintId) {
+    public void changeReadyStatus(int readyComplaintId, LocalDate localDate) {
         int j = 0;
         int i = 0;
         for (Complaint complaint: complaintList) {
@@ -200,6 +244,20 @@ public class ComplaintListReader {
                     i++;
                     complaint.setStatus(Status.DO_ODBIORU);
                     String filePath = complaint.getcId() + "_Complaint.txt";
+                    complaint.setDate(localDate);
+                    Path path = Paths.get(filePath);
+                    List<String> lines;
+                    try {
+                        lines = Files.readAllLines(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    lines.set(7, String.valueOf(complaint.getDate()));
+                    try {
+                        Files.write(path, lines);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     Scanner sc;
                     try {
                         sc = new Scanner(new File(filePath));
@@ -284,7 +342,8 @@ public class ComplaintListReader {
                     String description = reader.readLine();
                     Status status = Status.valueOf(reader.readLine());
                     String producer = reader.readLine();
-                    complaintList.add(new Complaint(complaintId,cId,status,description,new Product(productId,productName,producer)));
+                    LocalDate localDate = LocalDate.parse(reader.readLine());
+                    complaintList.add(new Complaint(complaintId,cId,status,localDate,description,new Product(productId,productName,producer)));
                 }
                 catch (IOException e){
                     e.printStackTrace();

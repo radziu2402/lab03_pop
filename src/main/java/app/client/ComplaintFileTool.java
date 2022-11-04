@@ -7,11 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Scanner;
 
 public class ComplaintFileTool {
-    private String filename;
+    private final String filename;
 
     public ComplaintFileTool(int clientId) {
         this.filename = clientId + "_Complaint.txt";
@@ -34,6 +36,7 @@ public class ComplaintFileTool {
             myWriter.write(client.getComplaint().getDescription() + "\n");
             myWriter.write(String.valueOf(client.getComplaint().getStatus()) + "\n");
             myWriter.write(client.getComplaint().getProduct().getProducer() + "\n");
+            myWriter.write(String.valueOf(client.getComplaint().getDate()) + "\n");
             myWriter.close();
         } catch (IOException e) {
             System.out.println("Error");
@@ -49,9 +52,18 @@ public class ComplaintFileTool {
         }
         return Status.valueOf(status);
     }
+    public String checkTime(){
+        String time;
+        try {
+            time = Files.readAllLines(Paths.get(filename)).get(7);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return time;
+    }
     public String checkNote(){
         try {
-            return Files.readAllLines(Paths.get(filename)).get(7);
+            return Files.readAllLines(Paths.get(filename)).get(8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -70,7 +82,7 @@ public class ComplaintFileTool {
         }
         String fileContents = buffer.toString();
         sc.close();
-        String oldLine = null;
+        String oldLine;
         try {
             oldLine = Files.readAllLines(Paths.get(filePath)).get(5);
         } catch (IOException e) {
@@ -95,4 +107,21 @@ public class ComplaintFileTool {
             throw new RuntimeException(e);
         }
     }
+    public void updateTime(Client client){
+        String filePath = client.getClientId() + "_Complaint.txt";
+        Path path = Paths.get(filePath);
+        List<String> lines;
+        try {
+            lines = Files.readAllLines(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        lines.set(7, String.valueOf(client.getComplaint().getDate()));
+        try {
+            Files.write(path, lines);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

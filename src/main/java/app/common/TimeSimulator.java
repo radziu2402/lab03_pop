@@ -1,20 +1,51 @@
 package app.common;
 
+import java.io.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class TimeSimulator {
-    private static LocalDateTime localDateTime = LocalDateTime.now();
+    private LocalDate localDate = LocalDate.now();
 
-
-    public static LocalDateTime getLocalDateTime() {
-        return localDateTime;
+    public void addLocalDateTime() {
+        int randDays = (int)(Math.random() * ((7 - 1) + 1)) + 1;
+        this.localDate = this.localDate.plusDays(randDays);
     }
 
-    public static void addLocalDateTime() {
-        int randDays = (int)Math.floor(Math.random()*(7-1+1)+1);
-        int randHours = (int)Math.floor(Math.random()*(30-1+1)+1);
-        int randMinutes = (int)Math.floor(Math.random()*(80-1+1)+1);
-        TimeSimulator.localDateTime = TimeSimulator.localDateTime.plusDays(randDays).plusHours(randHours).plusMinutes(randMinutes);
+
+    public LocalDate checkTime(){
+        String filename = "time.txt";
+        File file = new File(filename);
+            if(!file.exists()){
+                try {
+                    file.createNewFile();
+                    try {
+                        FileWriter myWriter = new FileWriter(filename);
+                        myWriter.write(String.valueOf(localDate));
+                        myWriter.close();
+                    } catch (IOException e) {
+                        System.out.println("Error");
+                        e.printStackTrace();
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            localDate = LocalDate.parse(reader.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            FileWriter myWriter = new FileWriter(filename);
+            addLocalDateTime();
+            myWriter.write(String.valueOf(localDate));
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println("Error");
+            e.printStackTrace();
+        }
+        return localDate;
     }
+
 }

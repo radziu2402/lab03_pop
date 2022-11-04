@@ -6,7 +6,9 @@ import app.common.Status;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -17,7 +19,7 @@ public class ProducerListComplaint {
         return complaintList;
     }
 
-    public void changeStatus(int endComplaintId, Status status) {
+    public void changeStatus(int endComplaintId, Status status, LocalDate localDate) {
         int j = 0;
         int i = 0;
         for (Complaint complaint: complaintList) {
@@ -26,6 +28,20 @@ public class ProducerListComplaint {
                 if(complaint.getStatus().equals(Status.PRZYJETA)){
                     complaint.setStatus(status);
                     String filePath = complaint.getcId() + "_Complaint.txt";
+                    complaint.setDate(localDate);
+                    Path path = Paths.get(filePath);
+                    List<String> lines;
+                    try {
+                        lines = Files.readAllLines(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    lines.set(7, String.valueOf(complaint.getDate()));
+                    try {
+                        Files.write(path, lines);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     Scanner sc;
                     try {
                         sc = new Scanner(new File(filePath));
@@ -45,7 +61,6 @@ public class ProducerListComplaint {
                         throw new RuntimeException(e);
                     }
                     String newLine = status.toString();
-                    System.out.println(newLine);
                     fileContents = fileContents.replaceAll(oldLine, newLine);
                     FileWriter writer;
                     try {
@@ -63,7 +78,6 @@ public class ProducerListComplaint {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    System.out.println("Status reklamacji zostal zaktualizowany");
                     System.out.println("Wpisz notke reklamacji:");
                     Scanner scanner = new Scanner(System.in);
                     String reason = scanner.nextLine();
@@ -75,6 +89,7 @@ public class ProducerListComplaint {
                         System.out.println("Error");
                         e.printStackTrace();
                     }
+                    System.out.println("Status reklamacji zostal zaktualizowany");
                 }
                 j++;
             }
@@ -86,38 +101,6 @@ public class ProducerListComplaint {
             System.out.println("Reklamacja zostala juz zaakceptowana lub odrzucona");
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public void readAllComplaints(String producerr){
@@ -151,8 +134,9 @@ public class ProducerListComplaint {
                     String description = reader.readLine();
                     Status status = Status.valueOf(reader.readLine());
                     String producer = reader.readLine();
+                    LocalDate localDate = LocalDate.parse(reader.readLine());
                     if(producer.equals(producerr) && status.equals(Status.PRZYJETA)) {
-                        complaintList.add(new Complaint(complaintId, cId, status, description, new Product(productId, productName, producer)));
+                        complaintList.add(new Complaint(complaintId,cId,status,localDate,description,new Product(productId,productName,producer)));
                     }
                 }
                 catch (IOException e){

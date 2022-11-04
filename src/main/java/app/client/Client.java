@@ -33,7 +33,4 @@ public class Client {
     public Status getStatus() {
         return complaint.getStatus();
     }
-    public void changeStatus(Status status){
-        complaint.setStatus(status);
-    }
 }

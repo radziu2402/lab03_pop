@@ -1,11 +1,13 @@
 package app.producer;
 import app.common.Status;
+import app.common.TimeSimulator;
 
 import java.util.Scanner;
 
 public class ProducerApp {
     public static void main(String[] args) {
         ProducerListComplaint producerListComplaint = new ProducerListComplaint();
+        TimeSimulator timeSimulator = new TimeSimulator();
         System.out.println("Witaj producencie");
         System.out.println("Podaj nazwe firmy aby przejsc dalej");
         Scanner scanner = new Scanner(System.in);
@@ -26,14 +28,13 @@ public class ProducerApp {
                     producerListComplaint.readAllComplaints(producerr);
                     System.out.println("Wpisz ID reklamacji ktora chcesz przyjac");
                     int acceptComplaintId = scanner.nextInt();
-                    producerListComplaint.changeStatus(acceptComplaintId, Status.ZAAKCEPTOWANA);
-
+                    producerListComplaint.changeStatus(acceptComplaintId, Status.ZAAKCEPTOWANA, timeSimulator.checkTime());
                 }
                 case 3 -> {
                     producerListComplaint.readAllComplaints(producerr);
                     System.out.println("Wpisz ID reklamacji ktora chcesz odrzucic");
                     int declineComplaintId = scanner.nextInt();
-                    producerListComplaint.changeStatus(declineComplaintId, Status.ODRZUCONA);
+                    producerListComplaint.changeStatus(declineComplaintId, Status.ODRZUCONA, timeSimulator.checkTime());
                 }
                 case 4 -> System.exit(0);
                 default -> System.out.println("Niepoprawny wybor! Wpisz jeszcze raz \n\n");
