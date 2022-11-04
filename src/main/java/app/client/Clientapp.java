@@ -55,7 +55,15 @@ public class Clientapp {
                     break;
 
                 case 3:
+                    System.out.println("STATUS TWOJEJ REKLAMACJI:");
                     System.out.println(complaintFileTool.checkStatus());
+                    if(complaintFileTool.checkStatus().equals(Status.DO_ODBIORU) || complaintFileTool.checkStatus().equals(Status.ZAAKCEPTOWANA)){
+                        if(complaintFileTool.checkStatus().equals(Status.ZAAKCEPTOWANA)){
+                            System.out.println("Poczekaj az wadliwy produkt bedzie gotowy od odbioru");
+                        }
+                        System.out.println("Notka od producenta:");
+                        System.out.println(complaintFileTool.checkNote());
+                    }
                     client.getComplaint().setStatus(complaintFileTool.checkStatus());
                     break;
 

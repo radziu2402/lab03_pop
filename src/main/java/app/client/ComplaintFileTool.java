@@ -49,6 +49,13 @@ public class ComplaintFileTool {
         }
         return Status.valueOf(status);
     }
+    public String checkNote(){
+        try {
+            return Files.readAllLines(Paths.get(filename)).get(7);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public void updateStatus(Client client){
         String filePath = client.getClientId() + "_Complaint.txt";
         Scanner sc;

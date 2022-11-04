@@ -67,7 +67,14 @@ public class ProducerListComplaint {
                     System.out.println("Wpisz notke reklamacji:");
                     Scanner scanner = new Scanner(System.in);
                     String reason = scanner.nextLine();
-
+                    try {
+                        FileWriter myWriter = new FileWriter(filePath,true);
+                        myWriter.write(reason);
+                        myWriter.close();
+                    } catch (IOException e) {
+                        System.out.println("Error");
+                        e.printStackTrace();
+                    }
                 }
                 j++;
             }

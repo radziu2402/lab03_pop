@@ -126,6 +126,7 @@ public class ComplaintListReader {
         }
         if(j==0){
             System.out.println("Nie ma reklamacji o takim ID");
+            return;
         }
         if(i==0){
             System.out.println("Nie mozesz odrzucic reklamacji o tym statusie");
@@ -183,6 +184,7 @@ public class ComplaintListReader {
         }
         if(j==0){
             System.out.println("Nie ma reklamacji o takim ID");
+            return;
         }
         if(i==0){
             System.out.println("Reklamacja nie zostala jeszcze odebrana wiec nie mozna jej zakonczyc");
@@ -241,6 +243,7 @@ public class ComplaintListReader {
         }
         if(j==0){
             System.out.println("Nie ma reklamacji o takim ID");
+            return;
         }
         if(i==0){
             System.out.println("Reklamacja nie zostala jeszcze zaakceptowana przez producenta wiec nie mozna jej przekazac do odbioru");
