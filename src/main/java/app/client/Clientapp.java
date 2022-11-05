@@ -1,14 +1,11 @@
 package app.client;
 
-import app.common.Complaint;
-import app.common.Product;
-import app.common.Status;
-import app.common.TimeSimulator;
+import app.common.*;
 
 import java.util.Scanner;
 
 public class Clientapp {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws WrongStatusExcepion {
         ClientFileTool fileTool = new ClientFileTool();
         System.out.println("Witaj w sklepie AGD");
         System.out.println("Podaj swoje imie aby przejsc dalej");
@@ -75,6 +72,10 @@ public class Clientapp {
                     break;
 
                 case 4:
+                    if(!complaint){
+                        System.out.println("Jeszcze nie utworzyles reklamacji");
+                        break;
+                    }
                     if(client.getStatus().equals(Status.DO_ODBIORU)){
                         System.out.println("Produkt zostal odebrany. Przesylka dojdzie do ciebie w ciagu 3 dni roboczych");
                         client.getComplaint().setStatus(Status.ODEBRANA);
@@ -83,7 +84,7 @@ public class Clientapp {
                         complaintFileTool.updateStatus(client);
                     }
                     else
-                        System.out.println("Produkt nie jest jeszcze gotowy do odbioru");
+                        throw new WrongStatusExcepion("Produkt nie jest jeszcze gotowy do odbioru");
                     break;
 
                 case 5:
