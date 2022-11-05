@@ -26,14 +26,13 @@ public class Clientapp {
 
             int choice = scanner.nextInt();
             switch (choice) {
-                case 1:
+                case 1 -> {
                     System.out.println("TWOJE DANE:");
                     System.out.println("Id = " + client.getClientId());
                     System.out.println("Imie = " + client.getName());
-                    break;
-
-                case 2:
-                    if(complaint){
+                }
+                case 2 -> {
+                    if (complaint) {
                         System.out.println("Reklamacja juz istnieje");
                         break;
                     }
@@ -49,49 +48,42 @@ public class Clientapp {
                     System.out.println("Opis krotko reklamacje");
                     String description = scanner.nextLine();
                     timeSimulator.checkTime();
-                    client.setComplaint(new Complaint(client.getClientId(),description ,new Product(productId,nameOfProduct,producer),timeSimulator.checkTime()));
+                    client.setComplaint(new Complaint(client.getClientId(), description, new Product(productId, nameOfProduct, producer), timeSimulator.checkTime()));
                     complaint = true;
                     complaintFileTool.addComplaint(client);
-                    break;
-
-                case 3:
-                    if(!complaint){
+                }
+                case 3 -> {
+                    if (!complaint) {
                         System.out.println("Jeszcze nie utworzyles reklamacji");
                         break;
                     }
                     System.out.println("STATUS TWOJEJ REKLAMACJI: " + complaintFileTool.checkStatus());
                     System.out.println("Status zmieniono: " + complaintFileTool.checkTime());
-                    if(complaintFileTool.checkStatus().equals(Status.DO_ODBIORU) || complaintFileTool.checkStatus().equals(Status.ZAAKCEPTOWANA)){
-                        if(complaintFileTool.checkStatus().equals(Status.ZAAKCEPTOWANA)){
+                    if (complaintFileTool.checkStatus().equals(Status.DO_ODBIORU) || complaintFileTool.checkStatus().equals(Status.ZAAKCEPTOWANA)) {
+                        if (complaintFileTool.checkStatus().equals(Status.ZAAKCEPTOWANA)) {
                             System.out.println("Poczekaj az wymieniony produkt bedzie gotowy od odbioru");
                         }
                         System.out.println("Notka od producenta:");
                         System.out.println(complaintFileTool.checkNote());
                     }
                     client.getComplaint().setStatus(complaintFileTool.checkStatus());
-                    break;
-
-                case 4:
-                    if(!complaint){
+                }
+                case 4 -> {
+                    if (!complaint) {
                         System.out.println("Jeszcze nie utworzyles reklamacji");
                         break;
                     }
-                    if(client.getStatus().equals(Status.DO_ODBIORU)){
+                    if (client.getStatus().equals(Status.DO_ODBIORU)) {
                         System.out.println("Produkt zostal odebrany. Przesylka dojdzie do ciebie w ciagu 3 dni roboczych");
                         client.getComplaint().setStatus(Status.ODEBRANA);
                         client.getComplaint().setDate(timeSimulator.checkTime());
                         complaintFileTool.updateTime(client);
                         complaintFileTool.updateStatus(client);
-                    }
-                    else
+                    } else
                         throw new WrongStatusExcepion("Produkt nie jest jeszcze gotowy do odbioru");
-                    break;
-
-                case 5:
-                    System.exit(0);
-
-                default:
-                    System.out.println("Niepoprawny wybor! Wpisz jeszcze raz \n\n");
+                }
+                case 5 -> System.exit(0);
+                default -> System.out.println("Niepoprawny wybor! Wpisz jeszcze raz \n\n");
             }
     }
 }
